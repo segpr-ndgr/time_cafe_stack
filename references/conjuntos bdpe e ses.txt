@@ -1,0 +1,43 @@
+
+Esta Secretaria Executiva de Gestão por Resultados (SEGPR) da Secretaria de Planejamento, Gestão e Desenvolvimento Regional (SEPLAG) está desenvolvendo um projeto de inteligência de dados de suprimento em conjunto com a Secretaria Executiva de Administração e Finanças (SEAF) da Secretaria Estadual de Saúde. Para o projeto, é essencial a utilização de dados do PE Integrado. 
+
+Os dados são utilizados num painel de informações de suprimentos que já conta com dados do CEOS, do EFISCO e de conjuntos de dados internos (planilhas) da área responsável na SES. 
+
+peintegrado_consumo_adesao_arp
+peintegrado_todas_atas_registro_preco_v2
+liquidacao__2025
+
+##################
+HBL - ATI
+IP: 10.238.108.26
+porta: 1521
+SERVICE_NAME = PRD
+
+HRA - ATI
+IP:10.238.105.80
+porta: 1521
+SERVICE_NAME = PRD
+
+HR - SES
+IP: 10.17.56.10
+IP_externo: 200.196.169.86
+PORTA: 1521
+Database: PRD
+
+HAM - SES
+IP: 10.20.56.10
+IP_externo: 189.91.218.147
+PORTA:1521
+SERVICE_NAME = PRD
+
+HGV - SES
+IP: 10.19.56.10
+IP_externo: 200.17.138.4 
+PORTA: 1521
+SERVICE_NAME = PRD
+
+HOF - SES
+IP: 10.18.56.10 
+IP_externo: 200.238.109.142
+Port: 1521
+SERVICE_NAME = PRD

@@ -1,0 +1,99 @@
+/* navbar */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+}
+
+/* sidebar */
+.sidebar-title { font-size: 13px; }
+
+.sidebar .btn-primary {
+  margin-bottom: 5px; 
+  width: 80%; 
+  font-size: 12px !important;
+}
+
+.sidebar .btn-secondary {
+  margin-bottom: 5px; 
+  width: 80%;
+  font-size: 12px !important; 
+}
+
+.sidebar .btn-terciary {
+  margin-bottom: 5px; 
+  width: 80%;
+  font-size: 12px !important;
+}
+
+.custom-sidebar .selectize-dropdown {
+  font-size: 12px !important;
+}
+
+.custom-sidebar .selectize-control.single .selectize-input {
+  font-size: 12px !important;
+}
+
+.custom-sidebar .selectize-dropdown-content {
+  max-height: 150px;  /* Ajuste conforme necessário */
+  overflow-y: auto;
+}
+
+.custom-sidebar .accordion-button {
+  font-size: 12px;
+}
+
+.custom-sidebar .accordion-header {
+  font-size: 12px;
+}
+
+.selectize-input { font-size: 11px; line-height: 11px;} 
+.selectize-dropdown { font-size: 11px; line-height: 11px; }
+
+/* valuebox */
+
+.value-box-showcase .bi {
+  font-size: 3rem !important; 
+}
+
+/* leaflet */
+
+.leaflet-map-container {
+  max-height: 500px !important; /* Defina a altura máxima conforme necessário */
+}
+
+.leaflet-fullscreen {
+  max-height: 500px; 
+}
+
+/* botões */
+.btn {
+  padding: 10px;
+}
+
+.popover-body .action-button.btn {
+  padding: 10px;
+}
+
+.spi-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  width: 1.875rem;
+  height: 1.875rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  color: #000;
+  font-size: 0.8125rem;
+  letter-spacing: -1px;
+}
+
+.popover {
+  max-width: 300px; /* Ajuste este valor conforme necessário */
+}
+
+.popover-body {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

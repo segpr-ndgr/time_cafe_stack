@@ -1,0 +1,11 @@
+
+.panel {
+  background: #eee;
+  padding: 50px 25px 25px 25px;
+  border-radius: 25px;
+}
+
+#auth-user_pwd-label {
+  padding-top: 10px !important;
+}
+

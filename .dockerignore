@@ -1,0 +1,13 @@
+# Ignorar arquivos e pastas desnecessárias no build da imagem
+.Rproj.user
+*.Rproj
+.Rhistory
+*.log
+*.md
+*.qmd
+_site/
+.quarto/
+.git/
+.gitignore
+data/
+app_template/data/

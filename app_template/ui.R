@@ -1,0 +1,177 @@
+ui <- page(
+
+  title = "Suprimentos",
+  tags$script(
+    src = "https://cdn.jsdelivr.net/gh/Appsilon/shiny.tictoc@v0.2.0/shiny-tic-toc.min.js"
+  ),
+  # Inclusão de estilos CSS externos
+  tags$head(
+    tags$link(rel = "stylesheet", type = "text/css", href = "login.css"),
+  ),
+  tags$head(
+    tags$link(rel="stylesheet", href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200")
+  ),
+  useShinyjs(),
+  useWaiter(),
+
+  includeScript("www/script.js"),
+
+  theme = fn_custom_theme(),
+
+  tagList(
+    page_navbar(fillable = FALSE,
+      lang = "pt",
+      #navbar_options = navbar_options(collapsible = TRUE, underline = FALSE),
+      window_title = "Monitoramento &mdash; Dashboard",
+      title = fn_navbar(),
+      footer = div(class = "mlk-footer-logos",
+                   tags$a(
+                     href = "https://pt.wikipedia.org/wiki/Café",
+                     target = "_blank",
+                     img(
+                       src = "images/coffee.svg",
+                       height = "50",
+                       alt = "Coffee"
+                     )
+                   ),
+                   tags$a(
+                     href = "https://pt.wikipedia.org/wiki/Ubuntu_(filosofia)",
+                     target = "_blank",
+                     img(
+                       src = "images/ubuntu_logo.svg",
+                       height = "50",
+                       alt = "I am what I am because of who we all are"
+                     )
+                   ),
+                   tags$a(
+                     href = "https://www.r-project.org/",
+                     target = "_blank",
+                     img(
+                       src = "images/Rlogo.svg",
+                       height = "50",
+                       alt = "R Project"
+                     )
+                   ),
+                   tags$a(
+                     href = "https://shiny.rstudio.com/",
+                     target = "_blank",
+                     img(
+                       src = "images/shiny_hex_logo.svg",
+                       height = "50",
+                       alt = "Shiny Package"
+                     )
+                   ),
+                   tags$a(
+                     href = "https://greenplum.org/",
+                     target = "_blank",
+                     img(
+                       src = "images/greenplum_logo.png",
+                       height = "50",
+                       alt = "Greenplum"
+                     )
+                   ),
+                   tags$a(
+                     href = "https://www.bigdata.pe.gov.br/",
+                     target = "_blank",
+                     img(
+                       src = "images/bigdata_logo.png",
+                       height = "50",
+                       style = "border-radius: 5px;",
+                       alt = "BigData Pernambuco"
+                     )
+                   ),
+                   tags$a(
+                     href = "https://www.pe.gov.br/",
+                     target = "_blank",
+                     img(
+                       src = "images/logo_pe.svg",
+                       height = "50",
+                       alt = "Governo de Pernambuco"
+                     )
+                   )
+      ),
+      id = NS("main","tabs"),
+      nav_panel(
+        title = "Centralizadas",
+        class = "mlk-main",
+        value = "safety",
+        spsGoTop(
+          "default", 
+          right = "3%",  
+          bottom= "3%", 
+          icon = icon("arrow-up"), 
+          color = "#007bff"),
+        ui_Safety("safety")
+      ),
+      nav_panel(
+        title = "CEOS",
+        class = "mlk-main",
+        value = "ceos",
+        spsGoTop(
+          "default",
+          right = "3%",
+          bottom= "3%",
+          icon = icon("arrow-up"),
+          color = "#007bff"),
+        ui_Ceos("ceos")
+      ),
+      nav_panel(
+        title = "EFISCO",
+        class = "mlk-main",
+        value = "efisco",
+        spsGoTop(
+          "default",
+          right = "3%",
+          bottom= "3%",
+          icon = icon("arrow-up"),
+          color = "#007bff"),
+        ui_Liquidacao("liquidacao")
+      ),
+      nav_panel(
+        title = "Sobre",
+        class = "mlk-main",
+        value = "sobre",
+        spsGoTop(
+          "default",
+          right = "3%",
+          bottom= "3%",
+          icon = icon("arrow-up"),
+          color = "#007bff"),
+        ui_Sobre("about")
+      ),
+      nav_spacer(),
+      nav_item(link_home),
+      nav_item(link_git),
+      #nav_item(link_logout),
+      nav_item(htmlOutput("applocal"))
+      #nav_item(htmlOutput("appuser"))
+    )
+  )
+)
+
+
+if (status != "adm") {
+  ui
+} else {
+
+  secure_app(language = "pt-BR", #choose_language = TRUE,
+             keep_token = TRUE,
+             theme = fn_custom_theme(), fab_position = "none",
+             tags_top = tags$div(
+               tags$img(src = "images/logo_govpe.png", width = '80%')
+             ),
+
+             tags_bottom = tags$div(
+               tags$p(
+                 "Qualquer dúvida, entrar em contato com o ",
+                 tags$a(href = "mailto:andre.leite@sepe.pe.gov.br?Subject=SEPE Apps",
+                        target="_top", "administrador")
+               )
+             ),
+             background = "radial-gradient(circle at 22.4% 21.7%, rgb(238, 130, 238) 0%, rgb(127, 0, 255) 100.2%);",
+             head_auth = tagList(
+               tags$link(rel = "stylesheet", type = "text/css", href = "login.css"),
+             ),
+             ui
+  )
+}

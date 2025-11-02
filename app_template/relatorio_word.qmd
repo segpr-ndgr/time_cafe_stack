@@ -1,0 +1,337 @@
+---
+title: "RELATÓRIO DE JUSTIFICATIVA DE QUANTITATIVO"
+lang: pt-BR
+author: ""
+
+toc-title: "Índice"
+
+output: 
+  word_document:
+    reference_docx: modelo_paisagem.docx
+    toc: true
+    number_sections: true
+    highlight: espresso
+
+params:
+  unidade_saude: NA
+  ano_filtro: NA
+  justificativas: NA
+  descricao_filtro: NA
+  totais_vetor: NA
+  medias_vetor: NA
+  numero_processo: NA
+  numero_ipr: NA
+  objeto_irp: NA
+  tipo_item: NA
+  nome_solicitante: NA
+  cargo_solicitante: NA
+  periodo_desabastecimento: NA
+  detalhe_emprestimo: NA
+  nova_especialidade: NA
+  qtde_leitos: NA
+  procedimentos: NA
+  fracasso_licitacao: NA
+  tipo_sazonalidade: NA
+  df_plot_serie: NA
+  tbl_mes: NA
+---
+
+```{r setup, include=FALSE}
+Sys.setlocale("LC_ALL", "pt_BR.utf8")
+
+library(ragg)
+
+# Configurações globais de chunk
+knitr::opts_chunk$set(
+  echo = FALSE,
+  warning = FALSE,
+  message = FALSE,
+  results = "hide",
+  fig.width  = 10,
+  fig.height = 6,
+  fig.align = 'center',
+  dev = "ragg_png", fig.ext = "png",
+  out.width = "100%"
+)
+
+library(dplyr)
+library(flextable)
+library(ggplot2)
+library(gridExtra)
+library(gt)
+library(lubridate)
+library(knitr)
+library(tidyr)
+
+options(show.signif.stars = TRUE)
+
+unidade_saude <- params$unidade_saude
+ano <- as.numeric(params$ano_filtro)
+justificativas <- params$justificativas
+descricao_filtro <- params$descricao_filtro
+
+## Definições value boxes 
+
+tile_width <- 0.9
+tile_height <- 0.5
+value_nudge_x <- 0.7
+value_nudge_y <- 1.1
+value_font_size <- 5
+value_font_color <- "white"
+lab_nudge_x <- 0.7
+lab_nudge_y <- 0.9
+lab_font_size <- 4
+lab_font_color <- "white"
+img_nudge_x <- 1.2
+img_nudge_y <- 1
+img_size <- 0.2
+
+just_map <- list(
+  desabastecimento = "DESABASTECIMENTO HISTÓRICO",
+  emprestimo = "AQUISIÇÃO ATRAVÉS DE EMPRÉSTIMOS",
+  nova_especialidade = "HABILITAÇÃO DE NOVA ESPECIALIDADE",
+  aumento_leito = "AUMENTO DE LEITO",
+  aumento_procedimento = "AUMENTO DE PROCEDIMENTO – Atendimento/Cirurgias",
+  sazonalidade = "SAZIONALIDADE",
+  fracasso_licitacao = "FRACASSO/DESERÇÃO DO ITEM EM OUTROS PROCESSOS LICITATÓRIOS",
+  correcao_historica = "NECESSIDADE DE CORREÇÃO HISTÓRICA DE AQUISIÇÃO DO ITEM"
+)
+
+justificativas_exibidas <- just_map[params$justificativas]
+
+# Extração dos totais
+total_m2     <- params$totais[[paste0("ano", ano - 2)]]
+total_m1     <- params$totais[[paste0("ano", ano - 1)]]
+total_atual  <- params$totais[[paste0("ano", ano)]]
+
+# Extração das médias
+media_m2     <- params$medias[[paste0("ano", ano - 2)]]
+media_m1     <- params$medias[[paste0("ano", ano - 1)]]
+media_atual  <- params$medias[[paste0("ano", ano)]]
+
+# Total médio anual com base na média dos 3 anos
+media_geral <- mean(c(media_m2, media_m1, media_atual), na.rm = TRUE)
+total_base <- media_geral * 12
+
+# Ajuste por justificativas: +10% por justificativa, até 50%
+n_just <- length(params$justificativas)
+fator_ajuste <- min(n_just * 0.10, 0.50)
+total_final <- total_base * (1 + fator_ajuste)
+
+df_totais <- data.frame(
+  Ano = c(ano - 2, ano - 1, ano),
+  Quantitativo = c(total_m2, total_m1, total_atual)
+)
+
+df_medias <- data.frame(
+  Ano = c(ano - 2, ano - 1, ano),
+  `Média Mensal` = c(media_m2, media_m1, media_atual)
+)
+
+justificativas_exibidas <- list()
+
+if (!is.null(params$justificativas)) {
+  if ("desabastecimento" %in% params$justificativas) {
+    justificativas_exibidas <- append(justificativas_exibidas,
+      glue::glue("Desabastecimento histórico no período de {format(params$periodo_desabastecimento[1], '%d/%m/%Y')} a {format(params$periodo_desabastecimento[2], '%d/%m/%Y')}"))
+  }
+
+  if ("emprestimo" %in% params$justificativas && nzchar(params$detalhe_emprestimo)) {
+    justificativas_exibidas <- append(justificativas_exibidas,
+      glue::glue("Aquisição através de empréstimos: {params$detalhe_emprestimo}"))
+  }
+
+  if ("nova_especialidade" %in% params$justificativas && nzchar(params$nova_especialidade)) {
+    justificativas_exibidas <- append(justificativas_exibidas,
+      glue::glue("Habilitação de nova especialidade: {params$nova_especialidade}"))
+  }
+
+  if ("aumento_leito" %in% params$justificativas && !is.na(params$qtde_leitos)) {
+    justificativas_exibidas <- append(justificativas_exibidas,
+      glue::glue("Aumento de leitos: {params$qtde_leitos} leito(s)"))
+  }
+
+  if ("aumento_procedimento" %in% params$justificativas && nzchar(params$procedimentos)) {
+    justificativas_exibidas <- append(justificativas_exibidas,
+      glue::glue("Aumento de procedimento: {params$procedimentos}"))
+  }
+
+  if ("fracasso_licitacao" %in% params$justificativas && nzchar(params$fracasso_licitacao)) {
+    justificativas_exibidas <- append(justificativas_exibidas,
+      glue::glue("Fracasso ou deserção de item em outros processos licitatórios: {params$fracasso_licitacao}"))
+  }
+
+  if ("sazonalidade" %in% params$justificativas && length(params$tipo_sazonalidade) > 0) {
+    sazonalidades <- paste(params$tipo_sazonalidade, collapse = ", ")
+    justificativas_exibidas <- append(justificativas_exibidas,
+      glue::glue("Sazonalidade: {sazonalidades}"))
+  }
+}
+
+```
+
+# Resumo
+
+**SES - `r params$unidade_saude`**  
+**Processo nº `r params$numero_processo`**  
+**Despacho: [informar]**  
+**Destinatário:** SES - Gerência de Planejamento e Gestão de Contratações - Planejamento  
+**Assunto:** Justificativa de quantitativo dos itens solicitados na IRP Nº `r params$numero_ipr`  
+
+**Objeto:** `r params$objeto_irp`  
+**Tipo de Item:** `r toupper(params$tipo_item)`  
+**Responsável pela solicitação:** `r params$nome_solicitante` – `r params$cargo_solicitante`
+
+Os quantitativos apontados nas manifestações de interesse, apontados por esta Unidade de Saúde, na Intenção de Registro de Preço em
+comento, representam a estimativa da necessidade de atendimento para esta unidade.
+
+**Há relatório de consumo para comprovação?**  
+(X) SIM  
+( ) NÃO
+
+**Fonte do Relatório de Consumo**  
+( ) Alclog; ( ) Lavite; **(X) Ceos**; ( ) Horus; ( ) Soul MV; ( ) Outro/Qual? __________.
+
+**Período do Relatório de Consumo**
+`r paste0(ano - 2, " a ", ano)`
+
+# Quantitativo Estimado
+
+**Itens utilizados para gerar os quantitativos:**  
+`r if (length(params$descricao_filtro) == 0) {
+  "Nenhum item selecionado."
+} else {
+  paste0("- ", paste(params$descricao_filtro, collapse = "\n- "))
+}`
+
+```{r, results='asis', echo=FALSE}
+library(knitr)
+library(dplyr)
+library(glue)
+
+# Dados de totais e médias
+df_totais <- data.frame(
+  Ano = c(ano - 2, ano - 1, ano),
+  `Total` = c(total_m2, total_m1, total_atual)
+)
+
+df_medias <- data.frame(
+  Ano = c(ano - 2, ano - 1, ano),
+  `Média` = c(media_m2, media_m1, media_atual)
+)
+
+# Renderização com kable para Word
+cat("**Quantitativos totais observados nos últimos três anos**\n\n")
+kable(df_totais, format = "markdown", digits = 0, align = "c", format.args = list(big.mark = '.', decimal.mark = ','))
+
+cat("\n\n**Médias mensais de consumo**\n\n")
+kable(df_medias, format = "markdown", digits = 2, align = "c", format.args = list(big.mark = '.', decimal.mark = ','))
+
+# Texto heurístico separado
+cat(glue::glue("\n\nCom base na média de consumo mensal dos últimos três anos, o total estimado anual é de **{scales::number(total_base, big.mark = '.', decimal.mark = ',', accuracy = 1)}** unidades."))
+
+```
+
+# Justificativas Complementares
+
+```{r, results='asis', echo=FALSE}
+cat("**Lista de Justificativas**\n\n")
+if (length(justificativas_exibidas) == 0) {
+  cat("Nenhuma justificativa selecionada.")
+} else {
+  cat(paste0("- ", paste(unlist(justificativas_exibidas), collapse = "\n- ")))
+}
+
+```
+
+
+**Quantitativo**
+
+```{r, results='asis', echo=FALSE}
+cat(glue::glue("
+Considerando as justificativas complementares assinaladas acima, foi aplicado um acréscimo de 
+<b>{fator_ajuste * 100}%</b>, resultando em um total ajustado de 
+**{scales::number(total_final, big.mark = '.', decimal.mark = ',', accuracy = 1)}** unidades, que melhor reflete a real necessidade desta unidade. 
+</p>
+"))
+```
+
+# Despacho
+
+Diante do exposto, esclarecemos que o quantitativo estabelecido na Intenção de Registro de Preços busca não só observar um
+possível consumo, mas também leva em consideração que há variáveis complexas de serem previstas ou dimensionadas previamente, e
+compete à Administração Pública propiciar segurança na prestação do serviço à população, ofertando abastecimento suficiente e perene.
+
+Importante esclarecer que, o quantitativo do objeto deve ser suficiente para ter saldo disponível quando for necessário atender às intercorrências acima da média, observando-se que a média está sendo o parâmetro utilizado como lastro para mensurar o consumo desta unidade - `r params$unidade_saude`. A partir desta premissa, entende-se que o quantitativo do objeto requerido, traz segurança para o devido atendimento à população. 
+
+Cabe, ainda, ressaltar que a previsão de realizar o processo através da Intenção de Registro de Preços, embora não desvincule a Administração Pública do compromisso de mensurar o quantitativo de forma a traduzir a necessidade de pretensa contratação, deve ser uma ferramenta para situações como esta, tendo em vista não ser possível prever com exatidão o quantitativo necessário.
+
+Concluímos que a quantidade de cada unidade de saúde, solicitada visa cumprir fielmente com nossa responsabilidade de prover cuidados de saúde de forma contínua e eficaz, sem escassez ou excessos que poderiam comprometer a eficiência e a eficácia dos serviços prestados.
+
+<div style="text-align: center; margin-top: 60px;">
+
+**Atenciosamente,**  
+**`r params$nome_solicitante`**  
+*`r params$cargo_solicitante`*  
+`r format(Sys.Date(), '%d de %B de %Y')`
+
+</div>
+
+# Apêndices
+
+## Série histórica
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(params$df_plot_serie, aes(x = mes, y = total, fill = factor(ano))) +
+  geom_col(position = position_dodge(width = 0.8)) +
+  scale_fill_brewer(palette = "Set1", name = "Ano") +
+  labs(
+    title = "Consumo por mês",
+    x = "Mês",
+    y = "Total de unidades consumidas"
+  ) +
+  theme_minimal(base_family = "Arial", base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    legend.position = "top"
+  )
+```
+
+## Consumo detalhado
+
+```{r}
+df <- params$tbl_mes
+
+if (!is.null(df) && nrow(df) > 0) {
+  df %>%
+    mutate(across(jan:dez, ~replace_na(.x, 0))) %>%
+    select(ano, nome_programa, descricao_produto, nome_unidade_medida,
+           jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez) %>%
+    gt() %>%
+    tab_header(title = "Consumo mensal detalhado por item") %>%
+    opt_table_font(font = google_font("Jost")) %>%
+    fmt_number(
+      columns = jan:dez,
+      sep_mark = ".",
+      dec_mark = ",",
+      decimals = 0
+    ) %>%
+    cols_label(
+      ano = "Ano",
+      nome_programa = "Unidade",
+      descricao_produto = "Descrição",
+      nome_unidade_medida = "Un.",
+      jan = "Jan", fev = "Fev", mar = "Mar", abr = "Abr",
+      mai = "Maio", jun = "Jun", jul = "Jul", ago = "Ago",
+      set = "Set", out = "Out", nov = "Nov", dez = "Dez"
+    ) %>%
+    tab_options(
+    table.width = pct(100),
+    table.font.size = px(9),
+    heading.title.font.size = px(10)
+  )
+} else {
+  cat("Tabela de consumo não disponível.")
+}
+
+```
