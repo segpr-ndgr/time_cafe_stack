@@ -12,7 +12,7 @@
 <meta name="author" content="Time Café GOVPE" />
 
 
-<title>Stack - Time Café GOVPE (R)</title>
+<title>🧠 Stack - Time Café GOVPE (R)</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -2749,142 +2749,281 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore">Stack - Time Café GOVPE (R)</h1>
+<h1 class="title toc-ignore">🧠 Stack - Time Café GOVPE (R)</h1>
 <h4 class="author">Time Café GOVPE</h4>
 
 </div>
 
 
 <div id="visão-geral" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Visão geral</h1>
-<p>Este arquivo apresenta <strong>stack mínimo de desenvolvimento em R
-de acordo com o modelo seguido pelo “Time Café do GOVPE”</strong>.</p>
+<h1><span class="header-section-number">1</span> ☕ Visão geral</h1>
+<p>Este documento apresenta o <strong>stack mínimo de desenvolvimento em
+R</strong> adotado pelo <strong>Time Café GOVPE</strong> — um guia
+prático para configurar o ambiente, entender o estilo de código e se
+integrar rapidamente ao time.</p>
+<hr />
 </div>
-<div id="prérequisitos" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Pré‑requisitos</h1>
+<div id="pré-requisitos" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> ⚙️ Pré-requisitos</h1>
 <div id="desenvolvimento" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Desenvolvimento</h2>
-<ul>
-<li><strong>R &gt;= 4.5</strong> (<a href="https://cran.r-project.org/bin/windows/base/" class="uri">https://cran.r-project.org/bin/windows/base/</a>)</li>
-<li>IDE <strong>RStudio</strong> (<a href="https://posit.co/download/rstudio-desktop/" class="uri">https://posit.co/download/rstudio-desktop/</a>)<br />
-</li>
-<li>R Tools (<a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a>)</li>
-<li>Pacote <code>tidyverse</code></li>
-<li>Pacote vialactea com instalação offline:
-<code>install.packages(&quot;~/projetos/segpr_ndgr/time_cafe_stack/pacotes/vialactea_0.0.199.tar.gz&quot;, repos = NULL, type = &quot;source&quot;)</code></li>
-</ul>
+<h2><span class="header-section-number">2.1</span> 💻
+Desenvolvimento</h2>
+<table>
+<colgroup>
+<col width="41%" />
+<col width="58%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ferramenta</th>
+<th>Descrição / Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>R &gt;= 4.5</strong></td>
+<td><a href="https://cran.r-project.org/bin/windows/base/">Download
+CRAN</a></td>
+</tr>
+<tr class="even">
+<td><strong>RStudio</strong></td>
+<td><a href="https://posit.co/download/rstudio-desktop/">Download
+IDE</a></td>
+</tr>
+<tr class="odd">
+<td><strong>R Tools</strong></td>
+<td><a href="https://cran.r-project.org/bin/windows/Rtools/">Download</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Pacotes essenciais:</strong></p>
+<pre class="r"><code>install.packages(&quot;tidyverse&quot;)
+install.packages(&quot;~/projetos/segpr_ndgr/time_cafe_stack/pacotes/vialactea_0.0.199.tar.gz&quot;, repos = NULL, type = &quot;source&quot;)</code></pre>
 </div>
 <div id="produção" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Produção</h2>
+<h2><span class="header-section-number">2.2</span> 🏭 Produção</h2>
 <ul>
-<li>Docker (<a href="https://www.docker.com/get-started/" class="uri">https://www.docker.com/get-started/</a>)</li>
+<li>Docker (<a href="https://www.docker.com/get-started/">site
+oficial</a>)</li>
 <li>VPN ATI</li>
-<li>Acesso aos servers de homologação / teste, produção e banco</li>
-<li>Acesso ao(s) github(s) do time</li>
+<li>Acesso aos servidores de <strong>homologação</strong>,
+<strong>produção</strong> e <strong>banco</strong></li>
+<li>Acesso aos <strong>GitHubs</strong> do time</li>
 </ul>
-<p><strong>Pacotes principais deste stack (mínimo):</strong></p>
-<ul>
-<li>Banco de dados: <code>DBI</code>, <code>dbplyr</code>,
-<code>RPostgres</code>, <code>pool</code></li>
-<li>Ciência de dados: <code>echarts4r</code>, <code>ggplot2</code>,
-<code>mapgl</code>, <code>plotly</code>, <code>sf</code></li>
-<li>Segurança: <code>shinymanager</code>, <code>safer</code>,
-`sodium``</li>
-<li>UI/UX: <code>bslib</code>, <code>bsicons</code>,
-<code>htmltools</code>, <code>htmlwidgets</code>,
-<code>shinyWidgets</code></li>
-</ul>
+<div id="pacotes-principais-stack-mínimo" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> 📦 Pacotes
+principais (stack mínimo)</h3>
+<table>
+<colgroup>
+<col width="54%" />
+<col width="45%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Categoria</th>
+<th>Pacotes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Banco de dados</strong></td>
+<td><code>DBI</code>, <code>dbplyr</code>, <code>RPostgres</code>,
+<code>pool</code></td>
+</tr>
+<tr class="even">
+<td><strong>Ciência de dados</strong></td>
+<td><code>echarts4r</code>, <code>ggplot2</code>, <code>mapgl</code>,
+<code>plotly</code>, <code>sf</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Segurança</strong></td>
+<td><code>shinymanager</code>, <code>safer</code>,
+<code>sodium</code></td>
+</tr>
+<tr class="even">
+<td><strong>UI / UX</strong></td>
+<td><code>bslib</code>, <code>bsicons</code>, <code>htmltools</code>,
+<code>htmlwidgets</code>, <code>shinyWidgets</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
 </div>
 </div>
-<div id="estrutura-sugerida-de-pastas" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Estrutura sugerida de
-pastas</h1>
-<pre><code>projeto
-├─ _legado/         # códigos não utilizados mais
-├─ app/             # aplicativo
-   ├─ app/data      # dados do app
-   ├─ app/helpers   # helpers do app
-   ├─ app/mapas     # dados específicos de mapas
-   ├─ app/modules   # os módulos do app
-   ├─ app/www       # estáticos: imagens, fontes, estilo...
-   global.R         # arquivo global do app
-   server.R         # servidor principal (main) do app
-   ui.R             # interface principal (main) do app
-├─ data/            # dados
-├─ docker/          # imagens
+</div>
+<div id="estrutura-de-pastas-sugerida" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> 🗂️ Estrutura de pastas
+sugerida</h1>
+<pre class="bash"><code>projeto/
+├─ _legado/         # códigos antigos ou descontinuados
+├─ app/             # aplicativo principal
+│  ├─ data/         # dados do app
+│  ├─ helpers/      # funções auxiliares
+│  ├─ mapas/        # dados geográficos
+│  ├─ modules/      # módulos do app
+│  ├─ www/          # estáticos: imagens, fontes, estilo...
+│  ├─ global.R
+│  ├─ server.R
+│  └─ ui.R
+├─ data/            # dados brutos ou tratados
+├─ docker/          # imagens e configurações Docker
 ├─ etl/             # scripts de ETL
-├─ pacotes/         # pacotes que não estão no CRAN
-├─ references/      # links de interesse, pdfs, etc.
-├─ scripts/         # scripts de interesse geral
-.dockerignore       # importante sempre ignorar as pastas data
-.gitignore          # importante sempre ignorar as pastas data
-README.md           # readme do projeto
-projeto.Rproj       # arquivo Rproj que organiza o projeto</code></pre>
+├─ pacotes/         # pacotes fora do CRAN
+├─ references/      # pdfs, links e docs de apoio
+├─ scripts/         # scripts diversos
+├─ .dockerignore
+├─ .gitignore
+├─ README.md
+└─ projeto.Rproj</code></pre>
+<hr />
 </div>
-<div id="convenções-de-código-mínimo" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Convenções de código
-(mínimo)</h1>
+<div id="convenções-de-código" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> 🧩 Convenções de
+código</h1>
 <ul>
-<li><strong>Estilo:</strong> código encadeado com pipe tidyverse
-(%&gt;%), trechos organizados com “# —-”, estilo padrão do R.</li>
-<li><strong>Nomes:</strong> <code>snake_case</code> para objetos e
-arquivos.</li>
-<li><strong>Scripts reprodutíveis:</strong> parametrizados quando
-possível, sem caminhos absolutos.</li>
-<li><strong>Seeds:</strong> fixe <code>set.seed()</code> quando houver
-aleatoriedade.</li>
+<li><strong>Estilo:</strong> encadeamento com <code>%&gt;%</code>,
+seções com <code># ----</code>.</li>
+<li><strong>Nomenclatura:</strong> <code>snake_case</code> para objetos
+e arquivos.</li>
+<li><strong>Scripts reprodutíveis:</strong> parametrizados, sem caminhos
+absolutos.</li>
+<li><strong>Aleatoriedade:</strong> sempre defina
+<code>set.seed()</code> quando aplicável.</li>
 </ul>
+<hr />
 </div>
 <div id="onboarding" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Onboarding</h1>
-<div id="como-estudar" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> Como estudar?</h2>
+<h1><span class="header-section-number">5</span> 🚀 Onboarding</h1>
+<div id="como-começar" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> 📚 Como começar</h2>
+<ol style="list-style-type: decimal">
+<li><p>Leia o artigo seminal do time:<br />
+📰 <a href="https://proceedings.open.tudelft.nl/DGO2025/article/view/925"><em>Government
+Data Science Teams – A Framework for Implementing Strategic Monitoring
+Solutions</em></a><br />
+(Premiado como <strong>Melhor Política Pública de Inovação Digital –
+2025</strong>)</p></li>
+<li><p>Faça os cursos recomendados:</p>
 <ul>
-<li>artigo DGO: <a href="https://proceedings.open.tudelft.nl/DGO2025/article/view/925">Government
-Data Science Teams A Framework for Implementing Strategic Monitoring
-Solutions</a>. Artigo seminal do time, vencedor do prêmio internacional
-de melhor política pública de Transformação Digital e Inovação de
-2025.</li>
-<li>curso R; <a href="https://livro.curso-r.com/">Básico de R</a></li>
-<li>curso EVG: <a href="https://www.escolavirtual.gov.br/curso/325">Análise de Dados em
-Linguagem R</a></li>
-<li>Vídeo aulas do prof. Hugo Medeiros: <a href="https://www.youtube.com/channel/UCtg6tgjgrFTWkWKCFN22HOg">R para
-Políticas</a></li>
+<li><a href="https://livro.curso-r.com/">Curso R – Básico
+(livro.curso-r.com)</a><br />
+</li>
+<li><a href="https://www.escolavirtual.gov.br/curso/325">EVG – Análise
+de Dados em Linguagem R</a><br />
+</li>
+<li><a href="https://www.youtube.com/channel/UCtg6tgjgrFTWkWKCFN22HOg">YouTube
+– R para Políticas (Prof. Hugo Medeiros)</a></li>
+</ul></li>
+</ol>
+</div>
+<div id="plataformas-de-referência" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> 🌐 Plataformas de
+referência</h2>
+<ul>
+<li><a href="https://resultados.seplag.pe.gov.br/">Portal
+Resultados</a><br />
+</li>
+<li><a href="https://box.pe.gov.br/">Portal Box</a></li>
 </ul>
 </div>
-<div id="o-que-conhecer" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> O que conhecer</h2>
-<ul>
-<li><a href="https://resultados.seplag.pe.gov.br/">portal
-Resultados</a></li>
-<li><a href="https://box.pe.gov.br/">portal Box</a></li>
-</ul>
+<div id="pacotes-r-do-time" class="section level2" number="5.3">
+<h2><span class="header-section-number">5.3</span> 📦 Pacotes R do
+Time</h2>
+<table>
+<colgroup>
+<col width="57%" />
+<col width="42%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pacote</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>BigDataPE</strong></td>
+<td><a href="https://monitoramento.sepe.pe.gov.br/bigdatape/">monitoramento.sepe.pe.gov.br/bigdatape</a></td>
+</tr>
+<tr class="even">
+<td><strong>capesR</strong></td>
+<td><a href="https://hugoavmedeiros.github.io/capesR/">hugoavmedeiros.github.io/capesR</a></td>
+</tr>
+<tr class="odd">
+<td><strong>diario</strong></td>
+<td><a href="https://monitoramento.sepe.pe.gov.br/diario/">monitoramento.sepe.pe.gov.br/diario</a></td>
+</tr>
+<tr class="even">
+<td><strong>pikchr</strong></td>
+<td><a href="https://monitoramento.sepe.pe.gov.br/pikchr/">monitoramento.sepe.pe.gov.br/pikchr</a></td>
+</tr>
+<tr class="odd">
+<td><strong>plug</strong></td>
+<td><a href="https://monitoramento.sepe.pe.gov.br/plug/">monitoramento.sepe.pe.gov.br/plug</a></td>
+</tr>
+<tr class="even">
+<td><strong>RapidFuzz</strong></td>
+<td><a href="https://monitoramento.sepe.pe.gov.br/rapidfuzz/">monitoramento.sepe.pe.gov.br/rapidfuzz</a></td>
+</tr>
+<tr class="odd">
+<td><strong>WebDAV</strong></td>
+<td><a href="https://monitoramento.sepe.pe.gov.br/webdav/">monitoramento.sepe.pe.gov.br/webdav</a></td>
+</tr>
+<tr class="even">
+<td><strong>whapi</strong></td>
+<td><a href="https://monitoramento.sepe.pe.gov.br/whapi/">monitoramento.sepe.pe.gov.br/whapi</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
 </div>
-<div id="pacotes-r-produzidos-pelo-time" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> Pacotes R produzidos
-pelo time</h2>
-<ul>
-<li><a href="https://monitoramento.sepe.pe.gov.br/bigdatape/">BigDataPE</a></li>
-<li><a href="https://hugoavmedeiros.github.io/capesR/">capesR</a></li>
-<li><a href="https://monitoramento.sepe.pe.gov.br/diario/">diario</a></li>
-<li><a href="https://monitoramento.sepe.pe.gov.br/pikchr/">pikchr</a></li>
-<li><a href="https://monitoramento.sepe.pe.gov.br/plug/">plug</a></li>
-<li><a href="https://monitoramento.sepe.pe.gov.br/rapidfuzz/">RapidFuzz</a></li>
-<li><a href="https://monitoramento.sepe.pe.gov.br/webdav/">WebDAV</a></li>
-<li><a href="https://monitoramento.sepe.pe.gov.br/whapi/">whapi</a></li>
-</ul>
 </div>
-</div>
-<div id="quem-é-o-time" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> Quem é o time?</h1>
-<p><strong>André Leite</strong> - <em>Cientista de Dados Chefe</em> <a href="https://www.linkedin.com/in/milkway/">linkedin</a></p>
-<p><strong>Diogo Bezerra</strong> - <em>Pesquisador Chefe</em> <a href="https://www.linkedin.com/in/dicbezerra/">linkedin</a></p>
-<p><strong>Hugo Medeiros</strong> - <em>Cientista de Dados Sênior</em>
-<a href="https://www.linkedin.com/in/hugoavmedeiros/">linkedin</a></p>
-<p><strong>Júlia Barreto</strong> - <em>Cientista de Dados Júnior</em>
-<a href="https://www.linkedin.com/in/j%C3%BAlia-barr%C3%AAto/">linkedin</a></p>
-<p><strong>Miguel Santos</strong> - <em>Cientista de Dados Júnior</em>
-<a href="https://www.linkedin.com/in/miguel-santos-6a66322b6/">linkedin</a></p>
+<div id="time-café-govpe" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> 👥 Time Café GOVPE</h1>
+<table>
+<colgroup>
+<col width="23%" />
+<col width="34%" />
+<col width="42%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nome</th>
+<th>Função</th>
+<th>LinkedIn</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>André Leite</strong></td>
+<td>Cientista de Dados Chefe</td>
+<td><a href="https://www.linkedin.com/in/milkway/">linkedin.com/in/milkway</a></td>
+</tr>
+<tr class="even">
+<td><strong>Diogo Bezerra</strong></td>
+<td>Pesquisador Chefe</td>
+<td><a href="https://www.linkedin.com/in/dicbezerra/">linkedin.com/in/dicbezerra</a></td>
+</tr>
+<tr class="odd">
+<td><strong>Hugo Medeiros</strong></td>
+<td>Cientista de Dados Sênior</td>
+<td><a href="https://www.linkedin.com/in/hugoavmedeiros/">linkedin.com/in/hugoavmedeiros</a></td>
+</tr>
+<tr class="even">
+<td><strong>Júlia Barreto</strong></td>
+<td>Cientista de Dados Júnior</td>
+<td><a href="https://www.linkedin.com/in/j%C3%BAlia-barr%C3%AAto/">linkedin.com/in/j%C3%BAlia-barr%C3%AAto/</a></td>
+</tr>
+<tr class="odd">
+<td><strong>Miguel Santos</strong></td>
+<td>Cientista de Dados Júnior</td>
+<td><a href="https://www.linkedin.com/in/miguel-santos-6a66322b6/">linkedin.com/in/miguel-santos-6a66322b6/</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>📍 <em>Este documento faz parte do stack padrão do Time Café GOVPE e
+serve como referência para novos integrantes e projetos em R.</em></p>
 </div>
 
 

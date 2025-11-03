@@ -1,5 +1,5 @@
 ---
-title: "Stack - Time Café GOVPE (R)"
+title: "🧠 Stack - Time Café GOVPE (R)"
 author: "Time Café GOVPE"
 output:
   html_document:
@@ -10,99 +10,126 @@ output:
 lang: "pt-BR"
 ---
 
-# Visão geral
+# ☕ Visão geral
 
-Este arquivo apresenta **stack mínimo de desenvolvimento em R de acordo com o modelo seguido pelo "Time Café do GOVPE"**.  
+Este documento apresenta o **stack mínimo de desenvolvimento em R** adotado pelo **Time Café GOVPE** — um guia prático para configurar o ambiente, entender o estilo de código e se integrar rapidamente ao time.
 
-# Pré‑requisitos
-## Desenvolvimento
+---
 
-- **R >= 4.5** (https://cran.r-project.org/bin/windows/base/)
-- IDE **RStudio** (https://posit.co/download/rstudio-desktop/)  
-- R Tools (https://cran.r-project.org/bin/windows/Rtools/)
-- Pacote `tidyverse`
-- Pacote vialactea com instalação offline: `install.packages("~/projetos/segpr_ndgr/time_cafe_stack/pacotes/vialactea_0.0.199.tar.gz", repos = NULL, type = "source")`
+# ⚙️ Pré-requisitos
 
-## Produção
+## 💻 Desenvolvimento
 
-- Docker (https://www.docker.com/get-started/)
+| Ferramenta | Descrição / Link |
+|-------------|------------------|
+| **R >= 4.5** | [Download CRAN](https://cran.r-project.org/bin/windows/base/) |
+| **RStudio** | [Download IDE](https://posit.co/download/rstudio-desktop/) |
+| **R Tools** | [Download](https://cran.r-project.org/bin/windows/Rtools/) |
+
+**Pacotes essenciais:**
+```r
+install.packages("tidyverse")
+install.packages("~/projetos/segpr_ndgr/time_cafe_stack/pacotes/vialactea_0.0.199.tar.gz", repos = NULL, type = "source")
+```
+
+## 🏭 Produção
+
+- Docker ([site oficial](https://www.docker.com/get-started/))
 - VPN ATI
-- Acesso aos servers de homologação / teste, produção e banco
-- Acesso ao(s) github(s) do time
+- Acesso aos servidores de **homologação**, **produção** e **banco**
+- Acesso aos **GitHubs** do time
 
-**Pacotes principais deste stack (mínimo):**
+### 📦 Pacotes principais (stack mínimo)
 
-- Banco de dados: `DBI`, `dbplyr`, `RPostgres`, `pool`
-- Ciência de dados: `echarts4r`, `ggplot2`, `mapgl`, `plotly`, `sf`
-- Segurança: `shinymanager`, `safer`, `sodium``
-- UI/UX: `bslib`, `bsicons`, `htmltools`, `htmlwidgets`, `shinyWidgets`
+| Categoria | Pacotes |
+|------------|----------|
+| **Banco de dados** | `DBI`, `dbplyr`, `RPostgres`, `pool` |
+| **Ciência de dados** | `echarts4r`, `ggplot2`, `mapgl`, `plotly`, `sf` |
+| **Segurança** | `shinymanager`, `safer`, `sodium` |
+| **UI / UX** | `bslib`, `bsicons`, `htmltools`, `htmlwidgets`, `shinyWidgets` |
 
-# Estrutura sugerida de pastas
+---
 
-```
-projeto
-├─ _legado/         # códigos não utilizados mais
-├─ app/             # aplicativo
-   ├─ app/data      # dados do app
-   ├─ app/helpers   # helpers do app
-   ├─ app/mapas     # dados específicos de mapas
-   ├─ app/modules   # os módulos do app
-   ├─ app/www       # estáticos: imagens, fontes, estilo...
-   global.R         # arquivo global do app
-   server.R         # servidor principal (main) do app
-   ui.R             # interface principal (main) do app
-├─ data/            # dados
-├─ docker/          # imagens
+# 🗂️ Estrutura de pastas sugerida
+
+```bash
+projeto/
+├─ _legado/         # códigos antigos ou descontinuados
+├─ app/             # aplicativo principal
+│  ├─ data/         # dados do app
+│  ├─ helpers/      # funções auxiliares
+│  ├─ mapas/        # dados geográficos
+│  ├─ modules/      # módulos do app
+│  ├─ www/          # estáticos: imagens, fontes, estilo...
+│  ├─ global.R
+│  ├─ server.R
+│  └─ ui.R
+├─ data/            # dados brutos ou tratados
+├─ docker/          # imagens e configurações Docker
 ├─ etl/             # scripts de ETL
-├─ pacotes/         # pacotes que não estão no CRAN
-├─ references/      # links de interesse, pdfs, etc.
-├─ scripts/         # scripts de interesse geral
-.dockerignore       # importante sempre ignorar as pastas data
-.gitignore          # importante sempre ignorar as pastas data
-README.md           # readme do projeto
-projeto.Rproj       # arquivo Rproj que organiza o projeto
+├─ pacotes/         # pacotes fora do CRAN
+├─ references/      # pdfs, links e docs de apoio
+├─ scripts/         # scripts diversos
+├─ .dockerignore
+├─ .gitignore
+├─ README.md
+└─ projeto.Rproj
 ```
 
-# Convenções de código (mínimo)
+---
 
-- **Estilo:** código encadeado com pipe tidyverse (%>%), trechos organizados com "# ----", estilo padrão do R.
-- **Nomes:** `snake_case` para objetos e arquivos.
-- **Scripts reprodutíveis:** parametrizados quando possível, sem caminhos absolutos.
-- **Seeds:** fixe `set.seed()` quando houver aleatoriedade.
+# 🧩 Convenções de código
 
-# Onboarding
-## Como estudar?
-- artigo DGO: [Government Data Science Teams A Framework for Implementing Strategic Monitoring Solutions](https://proceedings.open.tudelft.nl/DGO2025/article/view/925). Artigo seminal do time, vencedor do prêmio internacional de melhor política pública de Transformação Digital e Inovação de 2025.
-- curso R: [Básico de R](https://livro.curso-r.com/)
-- curso EVG: [Análise de Dados em Linguagem R](https://www.escolavirtual.gov.br/curso/325)
-- Vídeo aulas do prof. Hugo Medeiros: [R para Políticas](https://www.youtube.com/channel/UCtg6tgjgrFTWkWKCFN22HOg)
+- **Estilo:** encadeamento com `%>%`, seções com `# ----`.
+- **Nomenclatura:** `snake_case` para objetos e arquivos.
+- **Scripts reprodutíveis:** parametrizados, sem caminhos absolutos.
+- **Aleatoriedade:** sempre defina `set.seed()` quando aplicável.
 
-## O que conhecer
-- [portal Resultados](https://resultados.seplag.pe.gov.br/)
-- [portal Box](https://box.pe.gov.br/)
+---
 
-## Pacotes R produzidos pelo time
-- [BigDataPE](https://monitoramento.sepe.pe.gov.br/bigdatape/)
-- [capesR](https://hugoavmedeiros.github.io/capesR/)
-- [diario](https://monitoramento.sepe.pe.gov.br/diario/)
-- [pikchr](https://monitoramento.sepe.pe.gov.br/pikchr/)
-- [plug](https://monitoramento.sepe.pe.gov.br/plug/)
-- [RapidFuzz](https://monitoramento.sepe.pe.gov.br/rapidfuzz/)
-- [WebDAV](https://monitoramento.sepe.pe.gov.br/webdav/)
-- [whapi](https://monitoramento.sepe.pe.gov.br/whapi/)
+# 🚀 Onboarding
 
-# Quem é o time?
-**André Leite** - *Cientista de Dados Chefe*
-[linkedin](https://www.linkedin.com/in/milkway/)
+## 📚 Como começar
 
-**Diogo Bezerra** - *Pesquisador Chefe*
-[linkedin](https://www.linkedin.com/in/dicbezerra/)
+1. Leia o artigo seminal do time:  
+   📰 [*Government Data Science Teams – A Framework for Implementing Strategic Monitoring Solutions*](https://proceedings.open.tudelft.nl/DGO2025/article/view/925)  
+   (Premiado como **Melhor Política Pública de Inovação Digital – 2025**)
 
-**Hugo Medeiros** - *Cientista de Dados Sênior*
-[linkedin](https://www.linkedin.com/in/hugoavmedeiros/)
+2. Faça os cursos recomendados:  
+   - [Curso R – Básico (livro.curso-r.com)](https://livro.curso-r.com/)  
+   - [EVG – Análise de Dados em Linguagem R](https://www.escolavirtual.gov.br/curso/325)  
+   - [YouTube – R para Políticas (Prof. Hugo Medeiros)](https://www.youtube.com/channel/UCtg6tgjgrFTWkWKCFN22HOg)
 
-**Júlia Barreto** - *Cientista de Dados Júnior*
-[linkedin](https://www.linkedin.com/in/j%C3%BAlia-barr%C3%AAto/)
+## 🌐 Plataformas de referência
 
-**Miguel Santos** - *Cientista de Dados Júnior*
-[linkedin](https://www.linkedin.com/in/miguel-santos-6a66322b6/)
+- [Portal Resultados](https://resultados.seplag.pe.gov.br/)  
+- [Portal Box](https://box.pe.gov.br/)
+
+## 📦 Pacotes R do Time
+
+| Pacote | Link |
+|--------|------|
+| **BigDataPE** | [monitoramento.sepe.pe.gov.br/bigdatape](https://monitoramento.sepe.pe.gov.br/bigdatape/) |
+| **capesR** | [hugoavmedeiros.github.io/capesR](https://hugoavmedeiros.github.io/capesR/) |
+| **diario** | [monitoramento.sepe.pe.gov.br/diario](https://monitoramento.sepe.pe.gov.br/diario/) |
+| **pikchr** | [monitoramento.sepe.pe.gov.br/pikchr](https://monitoramento.sepe.pe.gov.br/pikchr/) |
+| **plug** | [monitoramento.sepe.pe.gov.br/plug](https://monitoramento.sepe.pe.gov.br/plug/) |
+| **RapidFuzz** | [monitoramento.sepe.pe.gov.br/rapidfuzz](https://monitoramento.sepe.pe.gov.br/rapidfuzz/) |
+| **WebDAV** | [monitoramento.sepe.pe.gov.br/webdav](https://monitoramento.sepe.pe.gov.br/webdav/) |
+| **whapi** | [monitoramento.sepe.pe.gov.br/whapi](https://monitoramento.sepe.pe.gov.br/whapi/) |
+
+---
+
+# 👥 Time Café GOVPE
+
+| Nome | Função | LinkedIn |
+|------|---------|-----------|
+| **André Leite** | Cientista de Dados Chefe | [linkedin.com/in/milkway](https://www.linkedin.com/in/milkway/) |
+| **Diogo Bezerra** | Pesquisador Chefe | [linkedin.com/in/dicbezerra](https://www.linkedin.com/in/dicbezerra/) |
+| **Hugo Medeiros** | Cientista de Dados Sênior | [linkedin.com/in/hugoavmedeiros](https://www.linkedin.com/in/hugoavmedeiros/) |
+| **Júlia Barreto** | Cientista de Dados Júnior | [linkedin.com/in/j%C3%BAlia-barr%C3%AAto/](https://www.linkedin.com/in/j%C3%BAlia-barr%C3%AAto/) |
+| **Miguel Santos** | Cientista de Dados Júnior | [linkedin.com/in/miguel-santos-6a66322b6/](https://www.linkedin.com/in/miguel-santos-6a66322b6/) |
+
+---
+
+📍 *Este documento faz parte do stack padrão do Time Café GOVPE e serve como referência para novos integrantes e projetos em R.*

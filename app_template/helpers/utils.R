@@ -221,27 +221,3 @@ find_owncloud_path <- function() {
   }
 }
 
-kpi_card <- function(title, icon_src, output_id, ns = NULL,
-                     bg_header_color = "#003366", bg_aux_color = "#003366") {
-  div(
-    class = "kpi-card",
-    
-    # Linha do ícone e título
-    div(
-      class = "kpi-header",
-      style = glue::glue("--header-color: {bg_header_color};"),  # Define a variável CSS
-      tags$img(src = icon_src, class = "kpi-icon"),
-      tags$h4(
-        tags$span(title, class = "kpi-title"),
-        style = "margin: 0;"
-      )
-    ),
-    
-    # Linha dos valores
-    div(
-      style = glue::glue("text-align: center; --aux-color: {bg_aux_color};"),
-      uiOutput(if (!is.null(ns)) ns(output_id) else output_id)
-    )
-  )
-}
-

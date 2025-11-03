@@ -1,0 +1,26 @@
+<svg width="200" height="300" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="black" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Braços segurando o dispositivo -->
+  <path d="M50 80 Q48 100 55 110" />
+  <path d="M150 80 Q152 100 145 110" />
+
+  <!-- Dispositivo (UPR) -->
+  <rect x="85" y="90" width="30" height="50" rx="5" ry="5" fill="black" stroke="black"/>
+  <!-- Tela cinza -->
+  <rect x="90" y="95" width="20" height="8" fill="gray" stroke="none"/>
+  <!-- Botão -->
+  <circle cx="100" cy="120" r="4" fill="gray" />
+  <!-- Texto UPR -->
+  <text x="100" y="135" font-size="8" text-anchor="middle" fill="white" stroke="none">UPR</text>
+
+  <!-- Mãos segurando -->
+  <path d="M55 110 Q65 115 85 115" />
+  <path d="M145 110 Q135 115 115 115" />
+
+  <!-- Corpo -->
+  <path d="M60 80 Q60 140 65 200" />
+  <path d="M140 80 Q140 140 135 200" />
+  
+  <!-- Pernas e sapatos -->
+  <path d="M65 200 Q60 250 40 260 Q75 260 90 250 Q85 200 85 200" />
+  <path d="M135 200 Q140 250 160 260 Q125 260 110 250 Q115 200 115 200" />
+</svg>

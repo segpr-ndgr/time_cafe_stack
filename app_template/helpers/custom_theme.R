@@ -19,9 +19,9 @@ fn_custom_theme <- function() {
     # primary = "#142755", # "rgb(20, 39, 85)",
     # secondary = "#0708F5", # "rgb(7, 8, 245)",
     # success = "#76DF43", # "rgb(118, 223, 67)",
-    info = "#400FFF", # "rgb(84, 178, 249)",
-    warning = "#FFCE00", # "rgb(240, 177, 61)",
-    danger = "#ED282C", #"rgb(216, 56, 49)"
+    # info = "#54B2F9", # "rgb(84, 178, 249)",
+    # warning = "#F0B13D", # "rgb(240, 177, 61)",
+    # danger = "#D83831", #"rgb(216, 56, 49)"
     ) |>
     # bs_add_variables("border-bottom-width" = "6px",
     #                  "border-color" = "$primary",

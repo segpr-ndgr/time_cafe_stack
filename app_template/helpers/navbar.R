@@ -15,12 +15,7 @@ fn_navbar <- function(){
 
 ## Links
 
-# link_home <-  tags$a(HTML("Contato"), href = "https://www.seplag.pe.gov.br/38-secretaria/30-segpr", target="_blank", rel="noopener noreferrer")
-
-link_home <- tags$a(
-  HTML("Contato"),
-  href = "mailto:segpr@seplag.pe.gov.br"
-)
+link_home <-  tags$a(HTML("Contato"), href = "https://www.seplag.pe.gov.br/38-secretaria/30-segpr", target="_blank", rel="noopener noreferrer")
 
 link_git <- tags$a(shiny::icon("github"), href = "https://github.com/segpr-ndgr", target = "_blank", rel="noopener noreferrer")
 
