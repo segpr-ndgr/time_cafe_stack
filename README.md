@@ -43,6 +43,7 @@ install.packages("~/projetos/segpr_ndgr/time_cafe_stack/pacotes/vialactea_0.0.19
 
 | Categoria | Pacotes |
 |------------|----------|
+| **Framework** | `shiny` |
 | **Banco de dados** | `DBI`, `dbplyr`, `RPostgres`, `pool` |
 | **Ciência de dados** | `echarts4r`, `ggplot2`, `mapgl`, `plotly`, `sf` |
 | **Segurança** | `shinymanager`, `safer`, `sodium` |
@@ -50,7 +51,157 @@ install.packages("~/projetos/segpr_ndgr/time_cafe_stack/pacotes/vialactea_0.0.19
 
 ---
 
-# 🗂️ Estrutura de pastas sugerida
+# 🖥️ Shiny no stack
+
+## O que é o Shiny?
+
+**Shiny** é um *framework* em R que permite criar aplicações web interativas — como dashboards e painéis — **usando apenas R**.  
+Ele integra o código R diretamente com tecnologias web, como **HTML**, **CSS** e **JavaScript**, tornando possível construir interfaces modernas sem sair do ecossistema R.
+
+## Relação com HTML, CSS e JavaScript
+
+- **HTML:** O Shiny gera automaticamente o HTML da interface através de funções como `fluidPage()`, `sidebarLayout()`, `tags$div()`, etc.  
+  Tudo que aparece na tela é, no fundo, HTML renderizado no navegador.  
+
+- **CSS:** O estilo visual é baseado no **Bootstrap** (via `{bslib}`), e pode ser personalizado com arquivos `.css` no diretório `app/www`.  
+  É possível alterar temas, fontes, espaçamentos e cores sem precisar modificar o código R.
+
+- **JavaScript:** O comportamento dinâmico (animações, eventos, mensagens cliente-servidor) é controlado por JavaScript.  
+  O Shiny faz essa ponte via `shinyjs`, `htmlwidgets` ou `session$sendCustomMessage()`.
+
+> Em resumo: o Shiny é a “cola reativa” que conecta **R (lógica de dados)** com **HTML/CSS/JS (camada de apresentação)**.
+
+## Estrutura típica do Shiny
+
+```
+app/
+├─ www/          # arquivos estáticos (CSS, JS, imagens)
+├─ modules/      # módulos reutilizáveis de interface e lógica
+├─ helpers/      # funções utilitárias para o app
+├─ global.R      # objetos e variáveis globais
+├─ server.R      # lógica reativa (back-end em R)
+└─ ui.R          # layout e componentes da interface
+```
+
+## Exemplo mínimo
+
+```r
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Exemplo Shiny GOVPE"),
+  sidebarLayout(
+    sidebarPanel(textInput("nome", "Digite seu nome:"), actionButton("ok", "Enviar")),
+    mainPanel(textOutput("saudacao"))
+  )
+)
+
+server <- function(input, output, session) {
+  output$saudacao <- renderText({
+    req(input$ok)
+    paste("Olá,", input$nome, "— bem-vindo(a) ao Time Café GOVPE!")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+## Exemplo do stack
+
+Quer ver o stack em funcionamento?  
+Na pasta `app_template/` você encontra um exemplo completo de app Shiny com estrutura e layout padrão do time.  
+
+Abra o projeto no RStudio, execute:
+```r
+shiny::runApp("app_template")
+```
+
+## Boas práticas
+
+- Modularize telas e fluxos (`mod_nome_ui`, `mod_nome_server`).  
+- Use `{bslib}` para unificar temas e estilos.  
+- Armazene CSS/JS personalizados em `app/www/`.  
+- Sempre isole scripts de manipulação de dados fora do `server`.  
+- Teste reatividade com `req()` e `observeEvent()` antes de expandir o app.
+
+---
+
+
+
+---
+
+# 📁 Trabalhando com projetos no RStudio
+
+## O que é um projeto no RStudio?
+
+Um **projeto RStudio (`.Rproj`)** é uma forma de organizar o trabalho em R com isolamento, reprodutibilidade e caminhos consistentes.  
+Quando você abre um projeto, o RStudio define automaticamente:
+
+- o **diretório de trabalho** (`getwd()`) como a raiz do projeto;  
+- o **ambiente de sessão** e histórico específicos daquele projeto;  
+- e, se configurado, ativa dependências via **`renv`**, **`packrat`** ou **Makefile**.
+
+Isso evita confusões com caminhos absolutos e mantém os scripts portáveis — algo essencial em ambientes colaborativos como o Time Café GOVPE.
+
+## Por que usar projetos?
+
+| Benefício | Descrição |
+|------------|------------|
+| **Reprodutibilidade** | Scripts rodam em qualquer máquina com o mesmo comportamento. |
+| **Organização** | Cada projeto tem sua estrutura (`data/`, `etl/`, `app/`, etc.). |
+| **Integração com Git** | O RStudio detecta e integra repositórios Git automaticamente. |
+| **Ambientes isolados** | Dependências e histórico não se misturam entre projetos. |
+
+## Como criar um projeto
+
+1. No RStudio, vá em:  
+   **File → New Project → Existing Directory** (ou *New Directory* para um novo).  
+2. Escolha a pasta raiz do seu stack (ex: `time_cafe_stack/`).  
+3. O RStudio criará um arquivo `nome_do_projeto.Rproj`.  
+4. A partir daí, sempre **abra o projeto clicando nesse arquivo** — não pelo menu “Open File”.
+
+💡 *Dica:* O `.Rproj` deve ficar **na raiz** do repositório e ser versionado junto com o restante dos arquivos.
+
+## Boas práticas para o time
+
+- **Nunca use caminhos absolutos** (`C:/Users/...`) — prefira caminhos relativos, ex.:  
+  ```r
+  read_csv("data/insumos.csv")
+  ```  
+  (ao abrir pelo `.Rproj`, o diretório raiz já é reconhecido automaticamente)
+  
+- **Separe scripts por tipo:** `etl/`, `app/`, `scripts/`, `pacotes/`.  
+- **Mantenha o ambiente limpo:** evite `rm(list = ls())` e prefira reiniciar a sessão (Ctrl + Shift + F10).  
+- **Ative o controle de versão** (Git) dentro do projeto — o RStudio já exibe aba “Git” quando detecta um repositório.  
+- **Centralize dependências** em `renv::init()` ou `requirements.R` para facilitar reprodutibilidade.
+
+## Exemplo de fluxo de trabalho
+
+```bash
+# 1. Abrir o projeto
+time_cafe_stack/
+├─ time_cafe_stack.Rproj
+
+# 2. No RStudio:
+#    - Ctrl + Shift + O abre o projeto
+#    - Ctrl + Shift + F10 reinicia sessão
+
+# 3. Rodar scripts do stack
+source("etl/etl_safety_supply.R")
+shiny::runApp("app_template/")
+```
+
+## Integração com o Stack GOVPE
+
+O arquivo `.Rproj` do stack já traz **configurações básicas**:
+- encoding UTF-8  
+- uso de tabs com 2 espaços  
+- opções de salvamento padrão  
+- compatibilidade com o `Makefile` e o `renv` do time  
+
+> 💬 *Sempre inicie seu trabalho a partir do `.Rproj` da raiz do projeto — é o ponto de partida oficial para manter consistência entre máquinas e desenvolvedores.*
+
+## 🗂️ Estrutura de pastas sugerida
 
 ```bash
 projeto/
@@ -130,6 +281,7 @@ projeto/
 | **Marcos Wasiliew** | Cientista de Dados Pleno | []() |
 | **Júlia Barreto** | Cientista de Dados Júnior | [linkedin.com/in/j%C3%BAlia-barr%C3%AAto/](https://www.linkedin.com/in/j%C3%BAlia-barr%C3%AAto/) |
 | **Miguel Santos** | Cientista de Dados Júnior | [linkedin.com/in/miguel-santos-6a66322b6/](https://www.linkedin.com/in/miguel-santos-6a66322b6/) |
+
 
 ---
 

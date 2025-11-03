@@ -2826,21 +2826,25 @@ principais (stack mínimo)</h3>
 </thead>
 <tbody>
 <tr class="odd">
+<td><strong>Framework</strong></td>
+<td><code>shiny</code></td>
+</tr>
+<tr class="even">
 <td><strong>Banco de dados</strong></td>
 <td><code>DBI</code>, <code>dbplyr</code>, <code>RPostgres</code>,
 <code>pool</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>Ciência de dados</strong></td>
 <td><code>echarts4r</code>, <code>ggplot2</code>, <code>mapgl</code>,
 <code>plotly</code>, <code>sf</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><strong>Segurança</strong></td>
 <td><code>shinymanager</code>, <code>safer</code>,
 <code>sodium</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><strong>UI / UX</strong></td>
 <td><code>bslib</code>, <code>bsicons</code>, <code>htmltools</code>,
 <code>htmlwidgets</code>, <code>shinyWidgets</code></td>
@@ -2851,9 +2855,244 @@ principais (stack mínimo)</h3>
 </div>
 </div>
 </div>
-<div id="estrutura-de-pastas-sugerida" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> 🗂️ Estrutura de pastas
-sugerida</h1>
+<div id="shiny-no-stack" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> 🖥️ Shiny no stack</h1>
+<div id="o-que-é-o-shiny" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> O que é o Shiny?</h2>
+<p><strong>Shiny</strong> é um <em>framework</em> em R que permite criar
+aplicações web interativas — como dashboards e painéis — <strong>usando
+apenas R</strong>.<br />
+Ele integra o código R diretamente com tecnologias web, como
+<strong>HTML</strong>, <strong>CSS</strong> e
+<strong>JavaScript</strong>, tornando possível construir interfaces
+modernas sem sair do ecossistema R.</p>
+</div>
+<div id="relação-com-html-css-e-javascript" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Relação com HTML, CSS
+e JavaScript</h2>
+<ul>
+<li><p><strong>HTML:</strong> O Shiny gera automaticamente o HTML da
+interface através de funções como <code>fluidPage()</code>,
+<code>sidebarLayout()</code>, <code>tags$div()</code>, etc.<br />
+Tudo que aparece na tela é, no fundo, HTML renderizado no
+navegador.</p></li>
+<li><p><strong>CSS:</strong> O estilo visual é baseado no
+<strong>Bootstrap</strong> (via <code>{bslib}</code>), e pode ser
+personalizado com arquivos <code>.css</code> no diretório
+<code>app/www</code>.<br />
+É possível alterar temas, fontes, espaçamentos e cores sem precisar
+modificar o código R.</p></li>
+<li><p><strong>JavaScript:</strong> O comportamento dinâmico (animações,
+eventos, mensagens cliente-servidor) é controlado por JavaScript.<br />
+O Shiny faz essa ponte via <code>shinyjs</code>,
+<code>htmlwidgets</code> ou
+<code>session$sendCustomMessage()</code>.</p></li>
+</ul>
+<blockquote>
+<p>Em resumo: o Shiny é a “cola reativa” que conecta <strong>R (lógica
+de dados)</strong> com <strong>HTML/CSS/JS (camada de
+apresentação)</strong>.</p>
+</blockquote>
+</div>
+<div id="estrutura-típica-do-shiny" class="section level2" number="3.3">
+<h2><span class="header-section-number">3.3</span> Estrutura típica do
+Shiny</h2>
+<pre><code>app/
+├─ www/          # arquivos estáticos (CSS, JS, imagens)
+├─ modules/      # módulos reutilizáveis de interface e lógica
+├─ helpers/      # funções utilitárias para o app
+├─ global.R      # objetos e variáveis globais
+├─ server.R      # lógica reativa (back-end em R)
+└─ ui.R          # layout e componentes da interface</code></pre>
+</div>
+<div id="exemplo-mínimo" class="section level2" number="3.4">
+<h2><span class="header-section-number">3.4</span> Exemplo mínimo</h2>
+<pre class="r"><code>library(shiny)
+
+ui &lt;- fluidPage(
+  titlePanel(&quot;Exemplo Shiny GOVPE&quot;),
+  sidebarLayout(
+    sidebarPanel(textInput(&quot;nome&quot;, &quot;Digite seu nome:&quot;), actionButton(&quot;ok&quot;, &quot;Enviar&quot;)),
+    mainPanel(textOutput(&quot;saudacao&quot;))
+  )
+)
+
+server &lt;- function(input, output, session) {
+  output$saudacao &lt;- renderText({
+    req(input$ok)
+    paste(&quot;Olá,&quot;, input$nome, &quot;— bem-vindo(a) ao Time Café GOVPE!&quot;)
+  })
+}
+
+shinyApp(ui, server)</code></pre>
+</div>
+<div id="exemplo-do-stack" class="section level2" number="3.5">
+<h2><span class="header-section-number">3.5</span> Exemplo do stack</h2>
+<p>Quer ver o stack em funcionamento?<br />
+Na pasta <code>app_template/</code> você encontra um exemplo completo de
+app Shiny com estrutura e layout padrão do time.</p>
+<p>Abra o projeto no RStudio, execute:</p>
+<pre class="r"><code>shiny::runApp(&quot;app_template&quot;)</code></pre>
+</div>
+<div id="boas-práticas" class="section level2" number="3.6">
+<h2><span class="header-section-number">3.6</span> Boas práticas</h2>
+<ul>
+<li>Modularize telas e fluxos (<code>mod_nome_ui</code>,
+<code>mod_nome_server</code>).<br />
+</li>
+<li>Use <code>{bslib}</code> para unificar temas e estilos.<br />
+</li>
+<li>Armazene CSS/JS personalizados em <code>app/www/</code>.<br />
+</li>
+<li>Sempre isole scripts de manipulação de dados fora do
+<code>server</code>.<br />
+</li>
+<li>Teste reatividade com <code>req()</code> e
+<code>observeEvent()</code> antes de expandir o app.</li>
+</ul>
+<hr />
+<hr />
+</div>
+</div>
+<div id="trabalhando-com-projetos-no-rstudio" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> 📁 Trabalhando com
+projetos no RStudio</h1>
+<div id="o-que-é-um-projeto-no-rstudio" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> O que é um projeto no
+RStudio?</h2>
+<p>Um <strong>projeto RStudio (<code>.Rproj</code>)</strong> é uma forma
+de organizar o trabalho em R com isolamento, reprodutibilidade e
+caminhos consistentes.<br />
+Quando você abre um projeto, o RStudio define automaticamente:</p>
+<ul>
+<li>o <strong>diretório de trabalho</strong> (<code>getwd()</code>) como
+a raiz do projeto;<br />
+</li>
+<li>o <strong>ambiente de sessão</strong> e histórico específicos
+daquele projeto;<br />
+</li>
+<li>e, se configurado, ativa dependências via
+<strong><code>renv</code></strong>,
+<strong><code>packrat</code></strong> ou <strong>Makefile</strong>.</li>
+</ul>
+<p>Isso evita confusões com caminhos absolutos e mantém os scripts
+portáveis — algo essencial em ambientes colaborativos como o Time Café
+GOVPE.</p>
+</div>
+<div id="por-que-usar-projetos" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Por que usar
+projetos?</h2>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Benefício</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Reprodutibilidade</strong></td>
+<td>Scripts rodam em qualquer máquina com o mesmo comportamento.</td>
+</tr>
+<tr class="even">
+<td><strong>Organização</strong></td>
+<td>Cada projeto tem sua estrutura (<code>data/</code>,
+<code>etl/</code>, <code>app/</code>, etc.).</td>
+</tr>
+<tr class="odd">
+<td><strong>Integração com Git</strong></td>
+<td>O RStudio detecta e integra repositórios Git automaticamente.</td>
+</tr>
+<tr class="even">
+<td><strong>Ambientes isolados</strong></td>
+<td>Dependências e histórico não se misturam entre projetos.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="como-criar-um-projeto" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Como criar um
+projeto</h2>
+<ol style="list-style-type: decimal">
+<li>No RStudio, vá em:<br />
+<strong>File → New Project → Existing Directory</strong> (ou <em>New
+Directory</em> para um novo).<br />
+</li>
+<li>Escolha a pasta raiz do seu stack (ex:
+<code>time_cafe_stack/</code>).<br />
+</li>
+<li>O RStudio criará um arquivo
+<code>nome_do_projeto.Rproj</code>.<br />
+</li>
+<li>A partir daí, sempre <strong>abra o projeto clicando nesse
+arquivo</strong> — não pelo menu “Open File”.</li>
+</ol>
+<p>💡 <em>Dica:</em> O <code>.Rproj</code> deve ficar <strong>na
+raiz</strong> do repositório e ser versionado junto com o restante dos
+arquivos.</p>
+</div>
+<div id="boas-práticas-para-o-time" class="section level2" number="4.4">
+<h2><span class="header-section-number">4.4</span> Boas práticas para o
+time</h2>
+<ul>
+<li><p><strong>Nunca use caminhos absolutos</strong>
+(<code>C:/Users/...</code>) — prefira caminhos relativos, ex.:</p>
+<pre class="r"><code>read_csv(&quot;data/insumos.csv&quot;)</code></pre>
+<p>(ao abrir pelo <code>.Rproj</code>, o diretório raiz já é reconhecido
+automaticamente)</p></li>
+<li><p><strong>Separe scripts por tipo:</strong> <code>etl/</code>,
+<code>app/</code>, <code>scripts/</code>, <code>pacotes/</code>.<br />
+</p></li>
+<li><p><strong>Mantenha o ambiente limpo:</strong> evite
+<code>rm(list = ls())</code> e prefira reiniciar a sessão (Ctrl + Shift
++ F10).<br />
+</p></li>
+<li><p><strong>Ative o controle de versão</strong> (Git) dentro do
+projeto — o RStudio já exibe aba “Git” quando detecta um
+repositório.<br />
+</p></li>
+<li><p><strong>Centralize dependências</strong> em
+<code>renv::init()</code> ou <code>requirements.R</code> para facilitar
+reprodutibilidade.</p></li>
+</ul>
+</div>
+<div id="exemplo-de-fluxo-de-trabalho" class="section level2" number="4.5">
+<h2><span class="header-section-number">4.5</span> Exemplo de fluxo de
+trabalho</h2>
+<pre class="bash"><code># 1. Abrir o projeto
+time_cafe_stack/
+├─ time_cafe_stack.Rproj
+
+# 2. No RStudio:
+#    - Ctrl + Shift + O abre o projeto
+#    - Ctrl + Shift + F10 reinicia sessão
+
+# 3. Rodar scripts do stack
+source(&quot;etl/etl_safety_supply.R&quot;)
+shiny::runApp(&quot;app_template/&quot;)</code></pre>
+</div>
+<div id="integração-com-o-stack-govpe" class="section level2" number="4.6">
+<h2><span class="header-section-number">4.6</span> Integração com o
+Stack GOVPE</h2>
+<p>O arquivo <code>.Rproj</code> do stack já traz <strong>configurações
+básicas</strong>: - encoding UTF-8<br />
+- uso de tabs com 2 espaços<br />
+- opções de salvamento padrão<br />
+- compatibilidade com o <code>Makefile</code> e o <code>renv</code> do
+time</p>
+<blockquote>
+<p>💬 <em>Sempre inicie seu trabalho a partir do <code>.Rproj</code> da
+raiz do projeto — é o ponto de partida oficial para manter consistência
+entre máquinas e desenvolvedores.</em></p>
+</blockquote>
+</div>
+<div id="estrutura-de-pastas-sugerida" class="section level2" number="4.7">
+<h2><span class="header-section-number">4.7</span> 🗂️ Estrutura de
+pastas sugerida</h2>
 <pre class="bash"><code>projeto/
 ├─ _legado/         # códigos antigos ou descontinuados
 ├─ app/             # aplicativo principal
@@ -2877,8 +3116,9 @@ sugerida</h1>
 └─ projeto.Rproj</code></pre>
 <hr />
 </div>
-<div id="convenções-de-código" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> 🧩 Convenções de
+</div>
+<div id="convenções-de-código" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> 🧩 Convenções de
 código</h1>
 <ul>
 <li><strong>Estilo:</strong> encadeamento com <code>%&gt;%</code>,
@@ -2892,10 +3132,10 @@ absolutos.</li>
 </ul>
 <hr />
 </div>
-<div id="onboarding" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> 🚀 Onboarding</h1>
-<div id="como-começar" class="section level2" number="5.1">
-<h2><span class="header-section-number">5.1</span> 📚 Como começar</h2>
+<div id="onboarding" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> 🚀 Onboarding</h1>
+<div id="como-começar" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> 📚 Como começar</h2>
 <ol style="list-style-type: decimal">
 <li><p>Leia o artigo seminal do time:<br />
 📰 <a href="https://proceedings.open.tudelft.nl/DGO2025/article/view/925"><em>Government
@@ -2916,8 +3156,8 @@ de Dados em Linguagem R</a><br />
 </ul></li>
 </ol>
 </div>
-<div id="plataformas-de-referência" class="section level2" number="5.2">
-<h2><span class="header-section-number">5.2</span> 🌐 Plataformas de
+<div id="plataformas-de-referência" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> 🌐 Plataformas de
 referência</h2>
 <ul>
 <li><a href="https://resultados.seplag.pe.gov.br/">Portal
@@ -2926,8 +3166,8 @@ Resultados</a><br />
 <li><a href="https://box.pe.gov.br/">Portal Box</a></li>
 </ul>
 </div>
-<div id="pacotes-r-do-time" class="section level2" number="5.3">
-<h2><span class="header-section-number">5.3</span> 📦 Pacotes R do
+<div id="pacotes-r-do-time" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> 📦 Pacotes R do
 Time</h2>
 <table>
 <colgroup>
@@ -2978,8 +3218,8 @@ Time</h2>
 <hr />
 </div>
 </div>
-<div id="time-café-govpe" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> 👥 Time Café GOVPE</h1>
+<div id="time-café-govpe" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> 👥 Time Café GOVPE</h1>
 <table>
 <colgroup>
 <col width="23%" />
