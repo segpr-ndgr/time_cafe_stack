@@ -124,8 +124,13 @@ shiny::runApp("app_template")
 - Sempre isole scripts de manipulação de dados fora do `server`.  
 - Teste reatividade com `req()` e `observeEvent()` antes de expandir o app.
 
----
 
+## 🧩 Convenções de código
+
+- **Estilo:** encadeamento com `%>%`, seções com `# ----`.
+- **Nomenclatura:** `snake_case` para objetos e arquivos.
+- **Scripts reprodutíveis:** parametrizados, sem caminhos absolutos.
+- **Aleatoriedade:** sempre defina `set.seed()` quando aplicável.
 
 
 ---
@@ -229,12 +234,60 @@ projeto/
 
 ---
 
-# 🧩 Convenções de código
+# 🏭 Deploy e Alternativas de Produção
 
-- **Estilo:** encadeamento com `%>%`, seções com `# ----`.
-- **Nomenclatura:** `snake_case` para objetos e arquivos.
-- **Scripts reprodutíveis:** parametrizados, sem caminhos absolutos.
-- **Aleatoriedade:** sempre defina `set.seed()` quando aplicável.
+O time de desenvolvimento utiliza a plataforma **ShinyProxy** como padrão para o ambiente de produção. Essa escolha é motivada pela necessidade de **isolamento de sessão** e **escalabilidade** inerentes à arquitetura de contêineres.
+
+## Comparação: Shiny Server vs ShinyProxy
+
+| Aspecto | Shiny Server (Alternativa) | ShinyProxy (Solução do Time) |
+| :--- | :--- | :--- |
+| **Lançamento do App** | Diretamente no sistema operacional. | Via Container Docker. |
+| **Arquitetura** | Sessões compartilham recursos do SO. Baixo isolamento. | Um container por sessão. Alto isolamento. |
+| **Isolamento** | Baixo. | Alto. |
+| **Escalabilidade** | Limitada. | Excelente (Containers leves e sob demanda). |
+| **Facilidade de Uso** | Muito fácil (Deploy *as is*). | Requer conhecimento de Docker e montagem da imagem. Curva de aprendizado maior. |
+
+## Por que o Time Café GOVPE usa ShinyProxy?
+
+O **ShinyProxy** utiliza a tecnologia Docker, onde cada sessão de usuário é executada em um contêiner separado. Isso é crucial para as aplicações do governo, pois:
+
+* **Segurança e Isolamento:** Garante alto isolamento entre sessões.
+* **Controle de Recursos:** Permite controle de recursos por usuário.
+* **Ambiente Padronizado:** A aplicação é empacotada com todas as suas dependências em uma Imagem Docker, garantindo que o ambiente seja padronizado e o deploy facilitado.
+
+# 🌐 Arquitetura de Infraestrutura
+
+A infraestrutura do Time Café GOVPE é segmentada em três ambientes principais, otimizados para cada etapa do ciclo de vida de uma aplicação Shiny (Desenvolvimento, ETL e Produção).
+
+## 💻 Desenvolvimento (Notebooks / Desktops dos Desenvolvedores)
+
+* **Finalidade:** Codificação, testes locais e prototipagem dos aplicativos Shiny, scripts de ETL e pacotes R.
+* **Características:** Ambiente local não conectado à produção. É aqui que o código é versionado (Git) antes de ir para os repositórios do time.
+* **Dados:** Utiliza bases de dados de desenvolvimento ou amostras.
+
+## ⚙️ Rotinas e ETL (Máquina 1 - Rotinas SEGPR)
+
+* **Finalidade:** Execução das rotinas programadas de **ETL (Extração, Transformação e Carga)** do time.
+* **Características:**
+    * Roda scripts que consomem dados de diversas fontes (APIs, bancos) e os processa.
+    * Possui um **serviço WebDAV** ativo, que serve como *stage* para hospedar os arquivos de dados (CSV, RDS, etc.) que serão consumidos pelo ambiente de produção.
+* **Fluxo de Dados:** Geração de dados processados e disponibilização via WebDAV.
+
+## 🚀 Produção (Máquina 2 - Plataforma Resultados)
+
+* **Finalidade:** Hospedagem e disponibilização pública dos aplicativos Shiny do time.
+* **Plataforma:** Roda o **ShinyProxy**, garantindo o alto isolamento e escalabilidade dos aplicativos.
+* **Características de Segurança/Dados:**
+    * **Volumes Read-Only (ro):** Os containers do ShinyProxy acessam os dados em *volumes de montagem* com permissão apenas de leitura. Isso impede que os aplicativos (e, consequentemente, os usuários) alterem qualquer arquivo de dado.
+    * **Rotina de Sincronização:** Uma rotina de sistema é responsável por buscar os dados atualizados no WebDAV da **Máquina 1** e atualizar os volumes de leitura da **Máquina 2**.
+* **Exceção (SI Tradicional):** Aplicativos como os de "Administração" e "Encaminhamentos" (que se assemelham a Sistemas de Informação tradicionais, embora feitos em R/Shiny) também são hospedados aqui. Eles se conectam diretamente ao **Banco (Máquina 3)** para operações de leitura/escrita transacionais.
+
+## 🗄️ Banco de Dados (Máquina 3)
+
+* **Finalidade:** Servir como o repositório central de dados transacionais e de administração.
+* **Uso Primário:** Essencial para os aplicativos de **Administração** e **Encaminhamentos**, que exigem operações de escrita/atualização de dados (transacionais).
+* **Uso Secundário (ETL):** Também é fonte de dados para as rotinas de ETL da **Máquina 1**.
 
 ---
 

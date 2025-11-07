@@ -2950,7 +2950,20 @@ app Shiny com estrutura e layout padrão do time.</p>
 <li>Teste reatividade com <code>req()</code> e
 <code>observeEvent()</code> antes de expandir o app.</li>
 </ul>
-<hr />
+</div>
+<div id="convenções-de-código" class="section level2" number="3.7">
+<h2><span class="header-section-number">3.7</span> 🧩 Convenções de
+código</h2>
+<ul>
+<li><strong>Estilo:</strong> encadeamento com <code>%&gt;%</code>,
+seções com <code># ----</code>.</li>
+<li><strong>Nomenclatura:</strong> <code>snake_case</code> para objetos
+e arquivos.</li>
+<li><strong>Scripts reprodutíveis:</strong> parametrizados, sem caminhos
+absolutos.</li>
+<li><strong>Aleatoriedade:</strong> sempre defina
+<code>set.seed()</code> quando aplicável.</li>
+</ul>
 <hr />
 </div>
 </div>
@@ -3117,25 +3130,160 @@ pastas sugerida</h2>
 <hr />
 </div>
 </div>
-<div id="convenções-de-código" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> 🧩 Convenções de
-código</h1>
+<div id="deploy-e-alternativas-de-produção" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> 🏭 Deploy e
+Alternativas de Produção</h1>
+<p>O time de desenvolvimento utiliza a plataforma
+<strong>ShinyProxy</strong> como padrão para o ambiente de produção.
+Essa escolha é motivada pela necessidade de <strong>isolamento de
+sessão</strong> e <strong>escalabilidade</strong> inerentes à
+arquitetura de contêineres.</p>
+<div id="comparação-shiny-server-vs-shinyproxy" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Comparação: Shiny
+Server vs ShinyProxy</h2>
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Aspecto</th>
+<th align="left">Shiny Server (Alternativa)</th>
+<th align="left">ShinyProxy (Solução do Time)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><strong>Lançamento do App</strong></td>
+<td align="left">Diretamente no sistema operacional.</td>
+<td align="left">Via Container Docker.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Arquitetura</strong></td>
+<td align="left">Sessões compartilham recursos do SO. Baixo
+isolamento.</td>
+<td align="left">Um container por sessão. Alto isolamento.</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Isolamento</strong></td>
+<td align="left">Baixo.</td>
+<td align="left">Alto.</td>
+</tr>
+<tr class="even">
+<td align="left"><strong>Escalabilidade</strong></td>
+<td align="left">Limitada.</td>
+<td align="left">Excelente (Containers leves e sob demanda).</td>
+</tr>
+<tr class="odd">
+<td align="left"><strong>Facilidade de Uso</strong></td>
+<td align="left">Muito fácil (Deploy <em>as is</em>).</td>
+<td align="left">Requer conhecimento de Docker e montagem da imagem.
+Curva de aprendizado maior.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="por-que-o-time-café-govpe-usa-shinyproxy" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Por que o Time Café
+GOVPE usa ShinyProxy?</h2>
+<p>O <strong>ShinyProxy</strong> utiliza a tecnologia Docker, onde cada
+sessão de usuário é executada em um contêiner separado. Isso é crucial
+para as aplicações do governo, pois:</p>
 <ul>
-<li><strong>Estilo:</strong> encadeamento com <code>%&gt;%</code>,
-seções com <code># ----</code>.</li>
-<li><strong>Nomenclatura:</strong> <code>snake_case</code> para objetos
-e arquivos.</li>
-<li><strong>Scripts reprodutíveis:</strong> parametrizados, sem caminhos
-absolutos.</li>
-<li><strong>Aleatoriedade:</strong> sempre defina
-<code>set.seed()</code> quando aplicável.</li>
+<li><strong>Segurança e Isolamento:</strong> Garante alto isolamento
+entre sessões.</li>
+<li><strong>Controle de Recursos:</strong> Permite controle de recursos
+por usuário.</li>
+<li><strong>Ambiente Padronizado:</strong> A aplicação é empacotada com
+todas as suas dependências em uma Imagem Docker, garantindo que o
+ambiente seja padronizado e o deploy facilitado.</li>
+</ul>
+</div>
+</div>
+<div id="arquitetura-de-infraestrutura" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> 🌐 Arquitetura de
+Infraestrutura</h1>
+<p>A infraestrutura do Time Café GOVPE é segmentada em três ambientes
+principais, otimizados para cada etapa do ciclo de vida de uma aplicação
+Shiny (Desenvolvimento, ETL e Produção).</p>
+<div id="desenvolvimento-notebooks-desktops-dos-desenvolvedores" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> 💻 Desenvolvimento
+(Notebooks / Desktops dos Desenvolvedores)</h2>
+<ul>
+<li><strong>Finalidade:</strong> Codificação, testes locais e
+prototipagem dos aplicativos Shiny, scripts de ETL e pacotes R.</li>
+<li><strong>Características:</strong> Ambiente local não conectado à
+produção. É aqui que o código é versionado (Git) antes de ir para os
+repositórios do time.</li>
+<li><strong>Dados:</strong> Utiliza bases de dados de desenvolvimento ou
+amostras.</li>
+</ul>
+</div>
+<div id="rotinas-e-etl-máquina-1---rotinas-segpr" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> ⚙️ Rotinas e ETL
+(Máquina 1 - Rotinas SEGPR)</h2>
+<ul>
+<li><strong>Finalidade:</strong> Execução das rotinas programadas de
+<strong>ETL (Extração, Transformação e Carga)</strong> do time.</li>
+<li><strong>Características:</strong>
+<ul>
+<li>Roda scripts que consomem dados de diversas fontes (APIs, bancos) e
+os processa.</li>
+<li>Possui um <strong>serviço WebDAV</strong> ativo, que serve como
+<em>stage</em> para hospedar os arquivos de dados (CSV, RDS, etc.) que
+serão consumidos pelo ambiente de produção.</li>
+</ul></li>
+<li><strong>Fluxo de Dados:</strong> Geração de dados processados e
+disponibilização via WebDAV.</li>
+</ul>
+</div>
+<div id="produção-máquina-2---plataforma-resultados" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> 🚀 Produção (Máquina
+2 - Plataforma Resultados)</h2>
+<ul>
+<li><strong>Finalidade:</strong> Hospedagem e disponibilização pública
+dos aplicativos Shiny do time.</li>
+<li><strong>Plataforma:</strong> Roda o <strong>ShinyProxy</strong>,
+garantindo o alto isolamento e escalabilidade dos aplicativos.</li>
+<li><strong>Características de Segurança/Dados:</strong>
+<ul>
+<li><strong>Volumes Read-Only (ro):</strong> Os containers do ShinyProxy
+acessam os dados em <em>volumes de montagem</em> com permissão apenas de
+leitura. Isso impede que os aplicativos (e, consequentemente, os
+usuários) alterem qualquer arquivo de dado.</li>
+<li><strong>Rotina de Sincronização:</strong> Uma rotina de sistema é
+responsável por buscar os dados atualizados no WebDAV da <strong>Máquina
+1</strong> e atualizar os volumes de leitura da <strong>Máquina
+2</strong>.</li>
+</ul></li>
+<li><strong>Exceção (SI Tradicional):</strong> Aplicativos como os de
+“Administração” e “Encaminhamentos” (que se assemelham a Sistemas de
+Informação tradicionais, embora feitos em R/Shiny) também são hospedados
+aqui. Eles se conectam diretamente ao <strong>Banco (Máquina 3)</strong>
+para operações de leitura/escrita transacionais.</li>
+</ul>
+</div>
+<div id="banco-de-dados-máquina-3" class="section level2" number="6.4">
+<h2><span class="header-section-number">6.4</span> 🗄️ Banco de Dados
+(Máquina 3)</h2>
+<ul>
+<li><strong>Finalidade:</strong> Servir como o repositório central de
+dados transacionais e de administração.</li>
+<li><strong>Uso Primário:</strong> Essencial para os aplicativos de
+<strong>Administração</strong> e <strong>Encaminhamentos</strong>, que
+exigem operações de escrita/atualização de dados (transacionais).</li>
+<li><strong>Uso Secundário (ETL):</strong> Também é fonte de dados para
+as rotinas de ETL da <strong>Máquina 1</strong>.</li>
 </ul>
 <hr />
 </div>
-<div id="onboarding" class="section level1" number="6">
-<h1><span class="header-section-number">6</span> 🚀 Onboarding</h1>
-<div id="como-começar" class="section level2" number="6.1">
-<h2><span class="header-section-number">6.1</span> 📚 Como começar</h2>
+</div>
+<div id="onboarding" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> 🚀 Onboarding</h1>
+<div id="como-começar" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> 📚 Como começar</h2>
 <ol style="list-style-type: decimal">
 <li><p>Leia o artigo seminal do time:<br />
 📰 <a href="https://proceedings.open.tudelft.nl/DGO2025/article/view/925"><em>Government
@@ -3156,8 +3304,8 @@ de Dados em Linguagem R</a><br />
 </ul></li>
 </ol>
 </div>
-<div id="plataformas-de-referência" class="section level2" number="6.2">
-<h2><span class="header-section-number">6.2</span> 🌐 Plataformas de
+<div id="plataformas-de-referência" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> 🌐 Plataformas de
 referência</h2>
 <ul>
 <li><a href="https://resultados.seplag.pe.gov.br/">Portal
@@ -3166,8 +3314,8 @@ Resultados</a><br />
 <li><a href="https://box.pe.gov.br/">Portal Box</a></li>
 </ul>
 </div>
-<div id="pacotes-r-do-time" class="section level2" number="6.3">
-<h2><span class="header-section-number">6.3</span> 📦 Pacotes R do
+<div id="pacotes-r-do-time" class="section level2" number="7.3">
+<h2><span class="header-section-number">7.3</span> 📦 Pacotes R do
 Time</h2>
 <table>
 <colgroup>
@@ -3218,8 +3366,8 @@ Time</h2>
 <hr />
 </div>
 </div>
-<div id="time-café-govpe" class="section level1" number="7">
-<h1><span class="header-section-number">7</span> 👥 Time Café GOVPE</h1>
+<div id="time-café-govpe" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> 👥 Time Café GOVPE</h1>
 <table>
 <colgroup>
 <col width="23%" />
