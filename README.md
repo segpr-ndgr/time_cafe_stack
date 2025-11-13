@@ -328,12 +328,15 @@ A infraestrutura do Time Café GOVPE é segmentada em três ambientes principais
 
 | Nome | Função | LinkedIn |
 |------|---------|-----------|
-| **André Leite** | Cientista de Dados Chefe | [linkedin.com/in/milkway](https://www.linkedin.com/in/milkway/) |
-| **Diogo Bezerra** | Pesquisador Chefe | [linkedin.com/in/dicbezerra](https://www.linkedin.com/in/dicbezerra/) |
-| **Hugo Medeiros** | Cientista de Dados Sênior | [linkedin.com/in/hugoavmedeiros](https://www.linkedin.com/in/hugoavmedeiros/) |
-| **Marcos Wasiliew** | Cientista de Dados Pleno | []() |
-| **Júlia Barreto** | Cientista de Dados Júnior | [linkedin.com/in/j%C3%BAlia-barr%C3%AAto/](https://www.linkedin.com/in/j%C3%BAlia-barr%C3%AAto/) |
-| **Miguel Santos** | Cientista de Dados Júnior | [linkedin.com/in/miguel-santos-6a66322b6/](https://www.linkedin.com/in/miguel-santos-6a66322b6/) |
+| **André Leite** | Cientista de Dados - Chefe | [linkedin.com/in/milkway](https://www.linkedin.com/in/milkway/) |
+| **Diogo Bezerra** | Pesquisador - Chefe | [linkedin.com/in/dicbezerra](https://www.linkedin.com/in/dicbezerra/) |
+| **Flavia Simões** | Cientista de Dados - Pleno | [-](-) |
+| **Hugo Medeiros** | Cientista de Dados - Sênior | [linkedin.com/in/hugoavmedeiros](https://www.linkedin.com/in/hugoavmedeiros/) |
+| **Ivo Carille** | Cientista de Dados - Pleno | [linkedin.com/in/ivo-carille](https://www.linkedin.com/in/ivo-carille-807a48336/) |
+| **João Paulo Andrade** | Cientista de Dados - Pleno | [linkedin.com/in/joãopauloandrade/](https://www.linkedin.com/in/jo%C3%A3opauloandrade/) |
+| **Júlia Barreto** | Cientista de Dados - Pleno | [linkedin.com/in/júliabarreto/](https://www.linkedin.com/in/j%C3%BAlia-barr%C3%AAto/) |
+| **Marcos Wasiliew** | Cientista de Dados - Pleno | [-](-) |
+| **Miguel Santos** | Cientista de Dados - Júnior | [linkedin.com/in/miguel-santos-6a66322b6/](https://www.linkedin.com/in/miguel-santos-6a66322b6/) |
 
 
 ---
